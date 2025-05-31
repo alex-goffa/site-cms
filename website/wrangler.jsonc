@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "site-rwsdk",
+  "name": "som-academy-website",
   "main": "src/worker.tsx",
   "compatibility_date": "2024-09-23",
   "compatibility_flags": [
@@ -21,7 +21,7 @@
     ]
   },
   "vars": {
-    "WEBAUTHN_APP_NAME": "__change_me__"
+    "WEBAUTHN_APP_NAME": "som-academy-website"
   },
   "migrations": [
     {
@@ -34,8 +34,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "__change_me__",
-      "database_id": "__change_me__"
+      "database_name": "som-academy-db",
+      "database_id": "dba8c59c-2995-4ebf-9881-5f1c4646b47e"
     }
   ]
 }

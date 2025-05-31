@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  /* Your custom Tailwind theme extensions can go here */
+  /* Example: --color-primary: #ff0000; */
+} 
