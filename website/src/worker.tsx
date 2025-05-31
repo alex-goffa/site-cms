@@ -2,6 +2,7 @@ import { defineApp, ErrorResponse } from "rwsdk/worker";
 import { route, render, prefix } from "rwsdk/router";
 import { Document } from "@/app/Document";
 import { Home } from "@/app/pages/Home";
+import { Blog } from "@/app/pages/Blog";
 import { setCommonHeaders } from "@/app/headers";
 import { userRoutes } from "@/app/pages/user/routes";
 import { sessions, setupSessionStore } from "./session/store";
@@ -46,5 +47,9 @@ export default defineApp([
       });
     }
   },
-  render(Document, [route("/", Home), prefix("/user", userRoutes)]),
+  render(Document, [
+    route("/", Home), 
+    route("/blog", Blog),
+    prefix("/user", userRoutes)
+  ]),
 ]);

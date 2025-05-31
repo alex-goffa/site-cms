@@ -1,8 +1,8 @@
-# Redwood ↔️ Sanity Studio Monorepo
+# SoM Academy Website & CMS Monorepo
 
 This monorepo contains two main projects:
-- `site-rwsdk/`: RedwoodJS application
-- `studio-rwsdk/`: Sanity Studio for content management
+- `website/`: RedwoodJS application (SoM Academy website)
+- `cms/`: Sanity Studio for content management
 
 ## Prerequisites
 
@@ -16,46 +16,98 @@ This monorepo contains two main projects:
 ### 1. Install Dependencies
 
 ```bash
-# Install RedwoodJS dependencies
-cd site-rwsdk
-yarn install
+# Install website dependencies
+cd website
+pnpm install
 
 # Install Sanity Studio dependencies
-cd ../studio-rwsdk
+cd ../cms
 pnpm install
 ```
 
-### 2. Run Development Servers
+### 2. Set up Local Database (Website)
 
-#### RedwoodJS App
 ```bash
-cd site-rwsdk
+cd website
+pnpm run migrate:dev  # Creates local D1 database
+```
+
+### 3. Run Development Servers
+
+#### Website (RedwoodJS)
+```bash
+cd website
 pnpm dev
 ```
-The RedwoodSDK app will be available at http://localhost:5173
+The website will be available at http://localhost:5173
 
 #### Sanity Studio
 ```bash
-cd studio-rwsdk
+cd cms
 pnpm dev
 ```
 Sanity Studio will be available at http://localhost:3333
 
+## Current Implementation
+
+### Website Features
+- **Homepage**: Minimal design with header and hero section
+- **Styling**: Tailwind CSS v4 + Flowbite components
+- **Primary Color**: Amber (customizable in `website/src/app/styles.css`)
+- **Database**: Cloudflare D1 (SQLite) with Prisma ORM
+- **Content**: Dynamic fetching from Sanity CMS (no rebuild needed for content updates)
+
+### Components Created
+- `SimpleHeader`: Navigation with responsive menu
+- `SimpleHeroSection`: Hero with CTA for teaching children problem-solving through mathematics
+
+### Deployment
+
+#### Website (Cloudflare Workers)
+- **Production URL**: https://som-academy-website.chowder-trombone091.workers.dev
+- **Cloudflare Settings**:
+  - Root directory: `website`
+  - Build command: `pnpm run release`
+  - Deploy command: (leave empty)
+
+#### Sanity Studio
+- Deploy via Sanity CLI when schema changes are made
+- Content updates don't require deployment
+
+## Known Issues Resolved
+- ✅ D1 database authentication errors
+- ✅ Flowbite-react compatibility with Tailwind v4
+- ✅ Miniflare configuration format mismatch
+
+## Next Steps
+- [ ] Add blog/article pages that fetch from Sanity
+- [ ] Implement authentication (WebAuthn ready)
+- [ ] Add more content sections to homepage
+- [ ] Deploy Sanity Studio to production
+- [ ] Set up custom domain
+
 ## Project Structure
 
-- `rwsdk/`: RedwoodJS application
-  - Frontend and backend code
+- `website/`: RedwoodJS application
+  - Frontend with React components
+  - Cloudflare Workers backend
+  - D1 database with Prisma ORM
+  - WebAuthn authentication ready
 
-- `studio-rwsdk/`: Sanity Studio
+- `cms/`: Sanity Studio
   - Content Management System
-  - Content models
+  - Content models for blog posts
   - Studio configuration
   - Schema definitions
 
 ## Environment Setup
 
-1. Copy `.env.example` to `.env` in both directories
-2. Update the environment variables with your Sanity project details
+### Website
+1. Local D1 database is created automatically with `pnpm run migrate:dev`
+2. Sanity project ID is hardcoded in `website/src/app/lib/sanity/client.ts`
+
+### CMS
+1. Sanity project details are in `cms/sanity.cli.ts` and `cms/sanity.config.ts`
 
 ---
 
@@ -113,7 +165,7 @@ export const postType = defineType({
 })
 ```
 
-Register the schema in the `studio/schemaTypes/index.ts
+Register the schema in the `studio/schemaTypes/index.ts`
 
 ```ts
 import {postType} from './postType'
@@ -160,4 +212,3 @@ Display the results:
 ```tsx
 <pre>{JSON.stringify(posts, null, 2)}</pre>
 ```
-

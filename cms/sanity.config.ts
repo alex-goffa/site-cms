@@ -5,9 +5,9 @@ import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'RWSDK',
+  title: 'SoM Academy',
 
-  projectId: 'cqjczpd4',
+  projectId: '2dg7ahdp',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
