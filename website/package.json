@@ -37,10 +37,11 @@
     "@tailwindcss/vite": "^4.1.8",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.11.7",
-    "rwsdk": "0.0.81",
+    "rwsdk": "0.0.86",
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250531.0",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -48,7 +49,7 @@
     "typescript": "^5.8.3",
     "vibe-rules": "^0.2.31",
     "vite": "^6.2.6",
-    "wrangler": "^4.14.1"
+    "wrangler": "^4.18.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

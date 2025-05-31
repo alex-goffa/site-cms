@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
 
 @theme {
   /* Your custom Tailwind theme extensions can go here */

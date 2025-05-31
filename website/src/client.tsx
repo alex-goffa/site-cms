@@ -1,4 +1,4 @@
 import { initClient } from "rwsdk/client";
-// import 'flowbite';
+import 'flowbite';
 
 initClient();
