@@ -1,4 +1,4 @@
-The SoM Academy Blog
+SoM Academy Blog
 
 # Sanity Clean Content Studio
 
