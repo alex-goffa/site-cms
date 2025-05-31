@@ -19,13 +19,13 @@ export async function Blog() {
   return (
     <>
       <SimpleHeader />
-      <main className="bg-white dark:bg-gray-900">
+      <main className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-            <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+            <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900">
               Our Blog
             </h2>
-            <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+            <p className="font-light text-gray-500 sm:text-xl">
               Insights and tips on teaching mathematics to children
             </p>
           </div>
@@ -34,17 +34,17 @@ export async function Blog() {
               posts.map((post) => (
                 <article
                   key={post._id}
-                  className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700"
+                  className="p-6 bg-white rounded-lg border border-gray-200 shadow-md"
                 >
-                  <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
                     <a href={`/blog/${post.slug.current}`}>{post.title}</a>
                   </h2>
-                  <p className="mb-5 font-light text-gray-500 dark:text-gray-400">
+                  <p className="mb-5 font-light text-gray-500">
                     Published on {new Date(post.publishedAt).toLocaleDateString()}
                   </p>
                   <a
                     href={`/blog/${post.slug.current}`}
-                    className="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline"
+                    className="inline-flex items-center font-medium text-primary-600 hover:underline"
                   >
                     Read more
                     <svg
@@ -63,7 +63,7 @@ export async function Blog() {
                 </article>
               ))
             ) : (
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-gray-500">
                 No posts yet. Create your first post in Sanity Studio!
               </p>
             )}

@@ -27,6 +27,13 @@ export const setCommonHeaders =
     // Defines trusted sources for content loading and script execution:
     headers.set(
       "Content-Security-Policy",
-      `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; frame-src https://challenges.cloudflare.com; object-src 'none';`,
+      `default-src 'self'; ` +
+      `script-src 'self' https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; ` +
+      `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com; ` +
+      `font-src 'self' https://fonts.gstatic.com; ` +
+      `img-src 'self' https://cdn.sanity.io https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://*.google-analytics.com https://*.googletagmanager.com data:; ` +
+      `connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; ` +
+      `frame-src https://challenges.cloudflare.com https://www.googletagmanager.com; ` +
+      `object-src 'none';`,
     );
   };

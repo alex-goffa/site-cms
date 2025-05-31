@@ -1,6 +1,6 @@
+import React from "react";
 import { client } from "@/app/lib/sanity/client";
 import { SimpleHeader } from "@/app/components/SimpleHeader";
-import { PortableText } from "@portabletext/react";
 import imageUrlBuilder from "@sanity/image-url";
 
 const builder = imageUrlBuilder(client);
@@ -37,12 +37,12 @@ export async function BlogPost({ params }: { params: { slug: string } }) {
     return (
       <>
         <SimpleHeader />
-        <main className="bg-white dark:bg-gray-900 min-h-screen">
+        <main className="bg-white min-h-screen">
           <div className="py-8 px-4 mx-auto max-w-screen-md text-center">
-            <h1 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h1 className="mb-4 text-3xl font-extrabold text-gray-900">
               Post not found
             </h1>
-            <p className="mb-8 text-lg text-gray-500 dark:text-gray-400">
+            <p className="mb-8 text-lg text-gray-500">
               The post you're looking for doesn't exist.
             </p>
             <a
@@ -60,7 +60,7 @@ export async function BlogPost({ params }: { params: { slug: string } }) {
   return (
     <>
       <SimpleHeader />
-      <main className="bg-white dark:bg-gray-900">
+      <main className="bg-white">
         <article className="mx-auto max-w-screen-md py-8 px-4 lg:py-16 lg:px-6">
           {/* Back link */}
           <a
@@ -84,10 +84,10 @@ export async function BlogPost({ params }: { params: { slug: string } }) {
 
           {/* Post header */}
           <header className="mb-8">
-            <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:text-4xl dark:text-white">
+            <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:text-4xl">
               {post.title}
             </h1>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-gray-500">
               Published on {new Date(post.publishedAt).toLocaleDateString()}
             </p>
           </header>
@@ -102,8 +102,35 @@ export async function BlogPost({ params }: { params: { slug: string } }) {
           )}
 
           {/* Post content */}
-          <div className="prose prose-lg max-w-none dark:prose-invert prose-primary prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 dark:prose-p:text-gray-300">
-            <PortableText value={post.body} />
+          <div className="prose prose-lg max-w-none prose-primary prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700">
+            {post.body.map((block: any) => {
+              if (block._type === 'block') {
+                if (block.style === 'h1') {
+                  return <h1 key={block._key} className="text-3xl font-bold mt-8 mb-4">{block.children[0].text}</h1>;
+                }
+                if (block.style === 'h2') {
+                  return <h2 key={block._key} className="text-2xl font-bold mt-6 mb-3">{block.children[0].text}</h2>;
+                }
+                if (block.style === 'h3') {
+                  return <h3 key={block._key} className="text-xl font-bold mt-4 mb-2">{block.children[0].text}</h3>;
+                }
+                // Normal paragraph
+                return (
+                  <p key={block._key} className="mb-4">
+                    {block.children.map((child: any) => {
+                      if (child.marks && child.marks.includes('strong')) {
+                        return <strong key={child._key}>{child.text}</strong>;
+                      }
+                      if (child.marks && child.marks.includes('em')) {
+                        return <em key={child._key}>{child.text}</em>;
+                      }
+                      return <span key={child._key}>{child.text}</span>;
+                    })}
+                  </p>
+                );
+              }
+              return null;
+            })}
           </div>
         </article>
       </main>
