@@ -12,7 +12,7 @@ export function SimpleHeroSection() {
             New
           </span>
           <span className="text-sm font-medium">
-            SoM Academy is here! Discover our method
+            SoM Academy is here! Discover our approach
           </span>
           <svg
             className="ml-2 w-5 h-5"
