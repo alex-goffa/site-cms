@@ -6,6 +6,7 @@ export function SimpleHeader() {
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           {/* Logo/Brand */}
           <a href="/" className="flex items-center">
+            <img src="/images/som-academy-logo.png" className="h-8 me-3" alt="SoM Academy Logo" />
             <span className="self-center text-xl font-semibold whitespace-nowrap text-gray-900">
               SoM Academy
             </span>
