@@ -4,6 +4,7 @@ import { Document } from "@/app/Document";
 import { Home } from "@/app/pages/Home";
 import { Blog } from "@/app/pages/Blog";
 import { BlogPost } from "@/app/pages/BlogPost";
+import { Contact } from "@/app/pages/Contact";
 import { setCommonHeaders } from "@/app/headers";
 import { userRoutes } from "@/app/pages/user/routes";
 import { sessions, setupSessionStore } from "./session/store";
@@ -52,6 +53,7 @@ export default defineApp([
     route("/", Home), 
     route("/blog", Blog),
     route("/blog/:slug", BlogPost),
+    route("/contact", Contact),
     prefix("/user", userRoutes)
   ]),
 ]);

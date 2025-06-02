@@ -10,7 +10,17 @@ export default defineConfig({
     redwood(),
     tailwindcss(),
   ],
-  // optimizeDeps: {
-  //   exclude: ['flowbite-react'], 
-  // },
+  optimizeDeps: {
+    exclude: ['flowbite-react'], 
+  },
+  server: {
+    hmr: {
+      overlay: false
+    }
+  },
+  resolve: {
+    alias: {
+      'tailwindcss/version.js': '/tailwind-patch.js'
+    }
+  }
 });
