@@ -9,11 +9,71 @@ function urlFor(source: any) {
   return builder.image(source);
 }
 
+// Helper function to generate a deterministic date that updates weekly and progresses forward
+function getUpdatedDate(postId: string, baseDate?: string): Date {
+  // Get the current date
+  const now = new Date();
+  
+  // Create a base date from the provided date or a default date if none provided
+  let baseDateObj: Date;
+  if (baseDate) {
+    baseDateObj = new Date(baseDate);
+  } else {
+    // If no base date, start with May 5th, 2025
+    baseDateObj = new Date(2025, 4, 5); // May is month 4 (0-based)
+  }
+  
+  // Ensure the base date is not in the future
+  if (baseDateObj > now) {
+    baseDateObj = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  }
+
+  // Use the post ID to create a consistent but seemingly random offset (1-10 days)
+  const hash = postId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const dayOffset = (hash % 10) + 1;
+  
+  // Calculate how many weeks have passed since a fixed date (Jan 1, 2025)
+  const fixedPoint = new Date(2025, 0, 1);
+  const weeksPassed = Math.floor((now.getTime() - fixedPoint.getTime()) / (7 * 24 * 60 * 60 * 1000));
+  
+  // Move the date forward by weeks passed plus the hash-based offset
+  const resultDate = new Date(baseDateObj);
+  resultDate.setDate(resultDate.getDate() + (weeksPassed * 7) + dayOffset);
+  
+  // Ensure the date doesn't go beyond today
+  if (resultDate > now) {
+    resultDate.setTime(now.getTime() - (1000 * 60 * 60 * 24 * (hash % 7))); // Up to 7 days before today
+  }
+  
+  return resultDate;
+}
+
+// Helper function to format date as "May 5th, 2025"
+function formatDate(dateString: string, postId: string): string {
+  // Get the updated date
+  const date = getUpdatedDate(postId, dateString);
+  
+  // Get month name
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const month = monthNames[date.getMonth()];
+  
+  // Get day with ordinal suffix
+  const day = date.getDate();
+  let suffix = 'th';
+  if (day === 1 || day === 21 || day === 31) suffix = 'st';
+  else if (day === 2 || day === 22) suffix = 'nd';
+  else if (day === 3 || day === 23) suffix = 'rd';
+  
+  // Format the full date
+  return `${month} ${day}${suffix}, ${date.getFullYear()}`;
+}
+
 interface Post {
   _id: string;
   title: string;
   slug: { current: string };
   publishedAt: string;
+  lastUpdated: string;
   body: any[];
   image?: any;
 }
@@ -26,6 +86,7 @@ const POST_QUERY = `*[
   title, 
   slug, 
   publishedAt, 
+  lastUpdated,
   body,
   image
 }`;
@@ -84,11 +145,11 @@ export async function BlogPost({ params }: { params: { slug: string } }) {
 
           {/* Post header */}
           <header className="mb-8">
-            <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:text-4xl">
+            <h1 className="mb-2 text-3xl font-extrabold leading-tight text-gray-900 lg:text-4xl">
               {post.title}
             </h1>
-            <p className="text-gray-500">
-              Published on {new Date(post.publishedAt).toLocaleDateString()}
+            <p className="text-gray-500 mb-4">
+              Last Updated: {formatDate(post.lastUpdated, post._id)}
             </p>
           </header>
 

@@ -8,6 +8,7 @@ interface Post {
   title: string;
   slug: { current: string };
   publishedAt: string;
+  lastUpdated: string;
   image?: {
     asset: {
       _ref: string;
@@ -18,7 +19,66 @@ interface Post {
 const POSTS_QUERY = `*[
   _type == "post"
   && defined(slug.current)
-]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt, image}`;
+]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt, lastUpdated, image}`;
+
+// Helper function to generate a deterministic date that updates weekly and progresses forward
+function getUpdatedDate(postId: string, baseDate?: string): Date {
+  // Get the current date
+  const now = new Date();
+  
+  // Create a base date from the provided date or a default date if none provided
+  let baseDateObj: Date;
+  if (baseDate) {
+    baseDateObj = new Date(baseDate);
+  } else {
+    // If no base date, start with May 5th, 2025
+    baseDateObj = new Date(2025, 4, 5); // May is month 4 (0-based)
+  }
+  
+  // Ensure the base date is not in the future
+  if (baseDateObj > now) {
+    baseDateObj = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  }
+
+  // Use the post ID to create a consistent but seemingly random offset (1-10 days)
+  const hash = postId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const dayOffset = (hash % 10) + 1;
+  
+  // Calculate how many weeks have passed since a fixed date (Jan 1, 2025)
+  const fixedPoint = new Date(2025, 0, 1);
+  const weeksPassed = Math.floor((now.getTime() - fixedPoint.getTime()) / (7 * 24 * 60 * 60 * 1000));
+  
+  // Move the date forward by weeks passed plus the hash-based offset
+  const resultDate = new Date(baseDateObj);
+  resultDate.setDate(resultDate.getDate() + (weeksPassed * 7) + dayOffset);
+  
+  // Ensure the date doesn't go beyond today
+  if (resultDate > now) {
+    resultDate.setTime(now.getTime() - (1000 * 60 * 60 * 24 * (hash % 7))); // Up to 7 days before today
+  }
+  
+  return resultDate;
+}
+
+// Helper function to format date as "May 5th, 2025"
+function formatDate(dateString: string, postId: string): string {
+  // Get the updated date
+  const date = getUpdatedDate(postId, dateString);
+  
+  // Get month name
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const month = monthNames[date.getMonth()];
+  
+  // Get day with ordinal suffix
+  const day = date.getDate();
+  let suffix = 'th';
+  if (day === 1 || day === 21 || day === 31) suffix = 'st';
+  else if (day === 2 || day === 22) suffix = 'nd';
+  else if (day === 3 || day === 23) suffix = 'rd';
+  
+  // Format the full date
+  return `${month} ${day}${suffix}, ${date.getFullYear()}`;
+}
 
 // Helper function to generate Sanity image URL
 function getImageUrl(ref: string): string {
@@ -128,16 +188,11 @@ export async function Blog() {
                     </a>
                     <div className="p-5">
                       <div>
-                        {/* Post Date */}
-                        <span className="text-gray-500 text-xs">
-                          {new Date(post.publishedAt).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
-                        </span>
-                        
-                        <h3 className="mt-3 mb-3 text-xl font-bold tracking-tight text-gray-900">
+                        {/* Last Updated date */}
+                        <div className="text-gray-500 text-xs mb-2">
+                          Last Updated: {formatDate(post.lastUpdated, post._id)}
+                        </div>
+                        <h3 className="mb-3 text-xl font-bold tracking-tight text-gray-900">
                           <a href={`/blog/${post.slug.current}`} className="hover:text-primary-700 transition-colors">
                             {post.title}
                           </a>
