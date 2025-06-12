@@ -35,12 +35,13 @@
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "@tailwindcss/vite": "^4.1.8",
+    "classnames": "^2.5.1",
     "flowbite": "^3.1.2",
-    "flowbite-react": "^0.11.7",
+    "flowbite-react": "^0.11.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "rwsdk": "0.0.86",
-    "tailwindcss": "^4.1.8"
+    "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250531.0",
